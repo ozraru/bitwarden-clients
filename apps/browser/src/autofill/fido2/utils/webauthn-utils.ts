@@ -88,6 +88,19 @@ export class WebauthnUtils {
       getClientExtensionResults: () => ({
         credProps: result.extensions.credProps,
       }),
+      toJSON(): PublicKeyCredentialJSON {
+        return {
+          id: credential.id,
+          rawId: credential.id,
+          type: credential.type,
+          authenticatorAttachment: credential.authenticatorAttachment,
+          clientExtensionResults: credential.getClientExtensionResults(), // credProps doesn't have binary
+          response: {
+            clientDataJSON: result.clientDataJSON,
+            attestationObject: result.attestationObject,
+          },
+        };
+      },
     } as PublicKeyCredential;
 
     // Modify prototype chains to fix `instanceof` calls.
@@ -134,6 +147,21 @@ export class WebauthnUtils {
       } as AuthenticatorAssertionResponse,
       getClientExtensionResults: () => ({}),
       authenticatorAttachment: "platform",
+      toJSON(): PublicKeyCredentialJSON {
+        return {
+          id: credential.id,
+          rawId: credential.id,
+          type: credential.type,
+          authenticatorAttachment: credential.authenticatorAttachment,
+          clientExtensionResults: credential.getClientExtensionResults(), // credProps doesn't have binary
+          response: {
+            authenticatorData: result.authenticatorData,
+            clientDataJSON: result.clientDataJSON,
+            signature: result.signature,
+            userHandle: result.userHandle,
+          },
+        };
+      },
     } as PublicKeyCredential;
 
     // Modify prototype chains to fix `instanceof` calls.
